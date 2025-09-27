@@ -10,10 +10,10 @@
 /// You can only use this scheduler for immediate actions. If you attempt to schedule
 /// actions after a specific date, this scheduler ignores the date and performs them
 /// immediately.
-public struct ImmediateScheduler: Scheduler {
+public struct ImmediateScheduler: Scheduler, Sendable {
 
     /// The time type used by the immediate scheduler.
-    public struct SchedulerTimeType: Strideable {
+    public struct SchedulerTimeType: Strideable, Sendable {
 
         fileprivate init() {}
 
@@ -39,7 +39,8 @@ public struct ImmediateScheduler: Scheduler {
                               Comparable,
                               SignedNumeric,
                               Codable,
-                              SchedulerTimeIntervalConvertible {
+                              SchedulerTimeIntervalConvertible,
+                              Sendable {
 
             /// The type used when evaluating floating-point literals.
             public typealias FloatLiteralType = Double

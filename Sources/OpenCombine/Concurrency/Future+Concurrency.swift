@@ -10,7 +10,7 @@ import _Concurrency
 #endif
 
 #if canImport(_Concurrency) && compiler(>=5.5) || compiler(>=5.5.1)
-extension Future where Failure == Never {
+extension Future where Failure == Never, Output: Sendable {
 
     /// The published value of the future, delivered asynchronously.
     ///
@@ -25,7 +25,7 @@ extension Future where Failure == Never {
     }
 }
 
-extension Future {
+extension Future where Output: Sendable {
 
     /// The published value of the future or an error, delivered asynchronously.
     ///
@@ -42,10 +42,10 @@ extension Future {
 }
 
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-private final class ContinuationSubscriber<Input,
+private final class ContinuationSubscriber<Input: Sendable,
                                            UpstreamFailure: Error,
                                            ErrorOrNever: Error>
-    : Subscriber
+    : Subscriber, @unchecked Sendable
 {
     typealias Failure = UpstreamFailure
 
@@ -111,7 +111,8 @@ extension ContinuationSubscriber where ErrorOrNever == Error {
         _ upstream: Upstream
     ) async throws -> Input
         where Upstream.Output == Input,
-              Upstream.Failure == UpstreamFailure
+              Upstream.Failure == UpstreamFailure,
+              Input: Sendable
     {
         try await withUnsafeThrowingContinuation { continuation in
             upstream.subscribe(ContinuationSubscriber(continuation))
@@ -125,7 +126,8 @@ extension ContinuationSubscriber where UpstreamFailure == Never, ErrorOrNever ==
         _ upstream: Upstream
     ) async -> Input
         where Upstream.Output == Input,
-              Upstream.Failure == Never
+              Upstream.Failure == Never,
+              Input: Sendable
     {
         await withUnsafeContinuation { continuation in
             upstream.subscribe(ContinuationSubscriber(continuation))

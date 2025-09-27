@@ -62,9 +62,9 @@ internal final class DebugHook {
         return hook.handlers.contains(Handler(handler: handler))
     }
 
-    private static var globalHook: DebugHook?
+    private nonisolated(unsafe) static var globalHook: DebugHook?
 
-    private static let globalLock = UnfairLock.allocate()
+    private nonisolated(unsafe) static let globalLock = UnfairLock.allocate()
 
     private let lock = UnfairLock.allocate()
 

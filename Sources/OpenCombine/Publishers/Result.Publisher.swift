@@ -329,9 +329,9 @@ extension Result.OCombine.Publisher {
 
 extension Result.OCombine.Publisher where Failure == Never {
 
-    public func setFailureType<Failure: Error>(
-        to failureType: Failure.Type
-    ) -> Result<Output, Failure>.OCombine.Publisher {
+    public func setFailureType<NewFailure: Error>(
+        to failureType: NewFailure.Type
+    ) -> Result<Output, NewFailure>.OCombine.Publisher {
         return .init(result.success)
     }
 }

@@ -16,7 +16,7 @@ import _Concurrency
 #endif
 
 #if canImport(_Concurrency) && compiler(>=5.5) || compiler(>=5.5.1)
-extension Publisher where Failure == Never {
+extension Publisher where Failure == Never, Output: Sendable {
 
     /// The elements produced by the publisher, as an asynchronous sequence.
     ///
@@ -39,7 +39,7 @@ extension Publisher where Failure == Never {
 /// with an instance of this type.
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public struct AsyncPublisher<Upstream: Publisher>: AsyncSequence
-    where Upstream.Failure == Never
+    where Upstream.Failure == Never, Upstream.Output: Sendable
 {
 
     public typealias Element = Upstream.Output
@@ -93,7 +93,7 @@ public struct AsyncPublisher<Upstream: Publisher>: AsyncSequence
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension AsyncPublisher.Iterator {
 
-    fileprivate final class Inner: Subscriber, Cancellable {
+    fileprivate final class Inner: Subscriber, Cancellable, @unchecked Sendable {
         typealias Input = Upstream.Output
         typealias Failure = Upstream.Failure
 
@@ -186,7 +186,7 @@ extension AsyncPublisher.Iterator {
         }
     }
 }
-extension Publisher {
+extension Publisher where Output: Sendable {
 
     /// The elements produced by the publisher, as a throwing asynchronous sequence.
     ///
@@ -213,6 +213,7 @@ extension Publisher {
 /// with an instance of this type.
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public struct AsyncThrowingPublisher<Upstream: Publisher>: AsyncSequence
+    where Upstream.Output: Sendable
 {
 
     public typealias Element = Upstream.Output
@@ -268,7 +269,7 @@ public struct AsyncThrowingPublisher<Upstream: Publisher>: AsyncSequence
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension AsyncThrowingPublisher.Iterator {
 
-    fileprivate final class Inner: Subscriber, Cancellable {
+    fileprivate final class Inner: Subscriber, Cancellable, @unchecked Sendable {
         typealias Input = Upstream.Output
         typealias Failure = Upstream.Failure
 

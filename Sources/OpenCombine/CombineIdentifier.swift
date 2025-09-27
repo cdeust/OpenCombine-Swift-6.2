@@ -25,7 +25,7 @@ internal func __nextCombineIdentifier() -> UInt64 {
 /// `CombineIdentifier` as follows:
 ///
 ///     let combineIdentifier = CombineIdentifier()
-public struct CombineIdentifier: Hashable, CustomStringConvertible {
+public struct CombineIdentifier: Hashable, CustomStringConvertible, Sendable {
 
     private let rawValue: UInt64
 
