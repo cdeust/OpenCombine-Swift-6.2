@@ -18,7 +18,7 @@ let supportedPlatforms: [Platform] = [
 ]
 
 let package = Package(
-    name: "OpenCombine",
+    name: "OpenCombine-Swift-6.2",
     products: [
         .library(name: "OpenCombine", targets: ["OpenCombine"]),
         .library(name: "OpenCombineDispatch", targets: ["OpenCombineDispatch"]),
